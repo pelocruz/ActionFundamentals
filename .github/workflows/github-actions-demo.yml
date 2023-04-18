@@ -5,7 +5,7 @@ on:
     branches: 
       - main
     paths-ignore: 
-      - .github
+      - .github/**
   pull_request:
     branches: 
       - main
@@ -20,4 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: step1
-        run: echo 'Job triggered by ${{ github.event_name }}'
+        run: echo 'Job triggered by ${{ github.event_name }}'        
+      - id: step2
+        run: echo 'Job triggered on branch ${{ github.ref }}'
+      - id: step3
+        run: |
+          echo "The repository ${{ github.repository }} contains the following files:"
+          tree
