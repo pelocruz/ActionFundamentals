@@ -20,4 +20,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: step1
-        run: echo "Job triggered by $github.event_name"
+        run: echo 'Job triggered by ${{ github.event_name }}'
