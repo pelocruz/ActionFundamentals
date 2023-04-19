@@ -14,6 +14,11 @@ on:
     - cron: '15 6 * * 0'
     
   workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: 'Environment to deploy to'
+        required: true
   
 jobs:
   Build:
@@ -30,3 +35,45 @@ jobs:
         run: |
           echo "The repository ${{ github.repository }} contains the following files:"
           tree
+          
+  Test:
+    runs-on: ubuntu-latest
+    needs: Build
+    if: github.event_name == 'workflow_dispatch'
+    environment: Test
+    steps:
+      - run: echo 'Testing...'
+    
+  Load-Test:
+    runs-on: ubuntu-latest
+    needs: Build
+    if: github.event_name == 'workflow_dispatch'
+    environment: Load-Test
+    steps:
+      - run: |
+        echo "Testing..."
+        sleep 15
+
+  Production:
+    runs-on: ubuntu-latest
+    needs: [Test, Load-Test]
+    if: github.event.inputs.environment == 'Production'
+    environment: 
+      name: Production
+      url: https://writeabout.net
+    steps:
+        - run: |
+            echo "🚀 Step 1..."
+            sleep 10
+        - run: |
+            echo "🚀 Step 2..."
+            sleep 10
+        - run: |
+            echo "🚀 Step 3..."
+            sleep 10
+        - run: |
+            echo "🚀 Step 4..."
+            sleep 10
+        - run: |
+            echo "🚀 Step 5..."
+            sleep 10
